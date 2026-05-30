@@ -20,7 +20,7 @@
 | Epic ID | Name | Agent | Status | Tasks Done | Blocker |
 |---|---|---|---|---|---|
 | E1 | Project Foundation & Auth | @meto-epic-E1 | testing-ready | 5 | none |
-| E2 | Venue Map & Discovery | @meto-epic-E2 | not-started | 0 | none |
+| E2 | Venue Map & Discovery | @meto-epic-E2 | testing-ready | 5 | none |
 | E3 | Reviews & Ratings | @meto-epic-E3 | not-started | 0 | E1 |
 | E4 | Drink Tracker | @meto-epic-E4 | not-started | 0 | E1 |
 | E5 | Betiv Profile & ANBR Card | @meto-epic-E5 | not-started | 0 | E1, E4 |
@@ -59,6 +59,8 @@ Append only. Never delete entries. One line per checkpoint.
 
 2026-05-30T22:47:00Z | E1 | done:4 | status:on-track | cycles:0 | blocker:none
 2026-05-30T23:00:00Z | E1 | done:5 | status:testing-ready | cycles:0 | blocker:none
+2026-05-30T23:20:00Z | E2 | done:3 | status:on-track | cycles:0 | blocker:none
+2026-05-30T23:30:00Z | E2 | done:5 | status:testing-ready | cycles:0 | blocker:none
 
 ---
 
@@ -80,3 +82,5 @@ Free text. Epic agents append observations, decisions, or notes here.
 
 2026-05-30T22:47:00Z | E1 | Completed slice-001 (Next.js scaffold), slice-002 (Supabase setup), slice-003 (auth pages), slice-004 (migrations). Slice-005 (middleware) in progress. Note: Migration files created but require manual application via Supabase dashboard — db password not available.
 2026-05-30T23:00:00Z | E1 | All 5 slices complete. npm run build passes with zero errors. E1 is testing-ready. Note: Next.js 16 uses proxy.ts instead of middleware.ts — slice-005 uses src/proxy.ts with export function proxy(). Migration files in supabase/migrations/ require manual application via Supabase SQL editor.
+2026-05-30T23:10:00Z | E2 | Session started. Adding leaflet + @types/leaflet to package.json for interactive map (E2 owns map feature; no other epic is active). Flagging per shared-file protocol.
+2026-05-30T23:30:00Z | E2 | All 5 E2 slices complete. npm run build passes zero errors. Routes: /venues, /venues/[id], /venues/new, /harta. Using vanilla Leaflet (not react-leaflet — peer dep conflict with React 19). Maps load client-side via VenueMapLoader wrapper (ssr:false in Client Component).

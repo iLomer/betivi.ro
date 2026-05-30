@@ -20,6 +20,10 @@ export interface Venue {
   address: string | null;
   description: string | null;
   category: VenueCategory | null;
+  lat: number | null;
+  lng: number | null;
+  rating_avg: number;
+  review_count: number;
   created_by: string | null;
   created_at: string;
 }
