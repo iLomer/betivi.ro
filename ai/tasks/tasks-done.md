@@ -346,3 +346,94 @@ As a visitor, I want to see all reviews for a venue on its detail page so that I
 
 **Out of Scope**
 Review submission form (slice-013), review editing, and pagination.
+
+---
+
+## [slice-018] — Profile Page
+**Epic:** E5 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E5
+Completed: 2026-05-30 | Files changed: src/app/(profile)/layout.tsx, src/app/(profile)/profile/page.tsx, src/lib/profile/queries.ts, src/components/profile/ProfileStats.tsx, src/components/profile/RecentLogs.tsx
+Self-validated: PASS
+
+**User Story**
+As a logged-in user, I want to view my profile page at /profile, so that I can see my username, drink stats, recent logs, and earned badges.
+
+**Acceptance Criteria**
+- [x] Route /profile exists under src/app/(profile)/profile/page.tsx
+- [x] Page redirects to /auth/login if not authenticated
+- [x] Displays username (or email fallback), drink stats (total/beer/wine/spirit), last 5 drink logs, and badge list
+- [x] Uses getDrinkStats and getDrinkLogsByUserId from E4 queries
+- [x] Reads profile from Supabase profiles table
+- [x] Romanian UI labels
+- [x] No any types, no console.log
+
+**Out of Scope**
+Avatar upload, follow/followers, edit form (slice-019)
+
+---
+
+## [slice-020] — Badge System
+**Epic:** E5 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E5
+Completed: 2026-05-30 | Files changed: src/lib/badges/index.ts, src/components/profile/BadgeList.tsx
+Self-validated: PASS
+
+**User Story**
+As a user, I want to earn badges based on how many drinks I have logged, so that I feel rewarded for contributing to the platform.
+
+**Acceptance Criteria**
+- [x] Badge logic lives in src/lib/badges/index.ts
+- [x] Badges defined: Primul Pahar (1 drink), Incepator (10), Experimentat (25), Veteran (50), Academician (100)
+- [x] Function getEarnedBadges(stats: DrinkStats): Badge[] returns all earned badges
+- [x] Badge type exported: { id, name, description, icon, threshold }
+- [x] Badge display component at src/components/profile/BadgeList.tsx
+- [x] No any types, no console.log
+
+**Out of Scope**
+Persisting badges to DB, notifications
+
+---
+
+## [slice-019] — Edit Profile Form
+**Epic:** E5 | **Size:** S | **Depends on:** slice-018
+Started: 2026-05-30 | Agent: meto-epic-E5
+Completed: 2026-05-30 | Files changed: src/lib/profile/actions.ts, src/components/profile/EditProfileForm.tsx, src/app/(profile)/profile/edit/page.tsx
+Self-validated: PASS
+
+**User Story**
+As a logged-in user, I want to update my username on the /profile/edit page, so that I can personalize my identity on the platform.
+
+**Acceptance Criteria**
+- [x] Route /profile/edit exists under src/app/(profile)/profile/edit/page.tsx
+- [x] Form shows current username prefilled
+- [x] Submits via server action in src/lib/profile/actions.ts
+- [x] Validates: username 3-30 chars, alphanumeric + underscores only
+- [x] Romanian error messages on validation failure
+- [x] On success redirects to /profile
+- [x] No any types, no console.log
+
+**Out of Scope**
+Avatar upload, email change
+
+---
+
+## [slice-021] — ANBR Card Component
+**Epic:** E5 | **Size:** S | **Depends on:** slice-018, slice-020
+Started: 2026-05-30 | Agent: meto-epic-E5
+Completed: 2026-05-30 | Files changed: src/components/anbr-card/ANBRCard.tsx
+Self-validated: PASS
+
+**User Story**
+As a user, I want to see and share my ANBR membership card showing my membership number, grade, stats, and top badge, so that I can spread the word about the platform.
+
+**Acceptance Criteria**
+- [x] Component at src/components/anbr-card/ANBRCard.tsx
+- [x] Membership number derived deterministically from user UUID (last 8 hex chars as decimal)
+- [x] Grade computed from total drinks: Stagiar (0-9), Autorizat (10-24), Emerit (25-49), Academician (50+)
+- [x] Displays: ANBR logo text, membership number, username, grade, total/beer/wine/spirit stats, top badge
+- [x] Card visible on /profile page below stats section
+- [x] Responsive, styled with Tailwind (amber/gold color scheme to feel like a membership card)
+- [x] No any types, no console.log
+
+**Out of Scope**
+PNG download, QR code, animated sharing
