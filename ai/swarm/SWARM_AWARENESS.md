@@ -21,11 +21,11 @@
 |---|---|---|---|---|---|
 | E1 | Project Foundation & Auth | @meto-epic-E1 | complete | 5 | none |
 | E2 | Venue Map & Discovery | @meto-epic-E2 | complete | 5 | none |
-| E3 | Reviews & Ratings | @meto-epic-E3 | testing-ready | 3 | none |
+| E3 | Reviews & Ratings | @meto-epic-E3 | complete | 3 | none |
 | E4 | Drink Tracker | @meto-epic-E4 | testing-ready | 3 | none |
 | E5 | Betiv Profile & ANBR Card | @meto-epic-E5 | testing-ready | 4 | none |
-| E6 | Romanian Producers Directory | @meto-epic-E6 | not-started | 0 | E1 |
-| E7 | Admin & Content Seeding | @meto-epic-E7 | not-started | 0 | E2, E3 |
+| E6 | Romanian Producers Directory | @meto-epic-E6 | on-track | 0 | none |
+| E7 | Admin & Content Seeding | @meto-epic-E7 | on-track | 0 | none |
 | E8 | Production Deployment & Observability | @meto-epic-E8 | not-started | 0 | E7 |
 
 Status values: `not-started` · `on-track` · `blocked` · `testing-ready` · `complete`
@@ -66,6 +66,7 @@ Append only. Never delete entries. One line per checkpoint.
 2026-05-30T00:00:00Z | E2 | done:5 | status:testing-ready | cycles:1 | blocker:none
 2026-05-30T00:05:00Z | E2 | done:5 | status:complete | cycles:2 | blocker:none
 2026-05-30T23:55:00Z | E3 | done:3 | status:testing-ready | cycles:0 | blocker:none
+2026-05-30T00:10:00Z | E3 | done:3 | status:complete | cycles:1 | blocker:none
 2026-05-30T23:05:00Z | E4 | done:3 | status:testing-ready | cycles:0 | blocker:none
 2026-05-30T22:47:54Z | E5 | done:4 | status:testing-ready | cycles:0 | blocker:none
 
@@ -95,3 +96,5 @@ Free text. Epic agents append observations, decisions, or notes here.
 2026-05-30T22:48:00Z | E4 | Session started. No E4 tasks existed in backlog — sliced 4 tasks (slice-014 through slice-017). All 4 moved to tasks-in-progress. Implementing drink tracker: DB schema, data layer, log form, and dashboard.
 2026-05-30T23:05:00Z | E4 | slice-014 (drink_logs schema + types), slice-015 (queries + actions), slice-016 (log form + /tracker/log page) DONE self-validated. slice-017 (dashboard) in tasks-in-testing. All files within E4 domain. npm run build passes zero errors.
 2026-05-30T22:47:54Z | E5 | Session started. No E5 tasks in backlog — sliced 4 tasks (slice-018 through slice-021). Implemented all 4 slices in single session. npm run build passes zero errors. All S-size slices self-validated to done.
+2026-05-30T22:50:00Z | E6 | Session started. No E6 tasks in backlog — slicing 4 tasks (slice-022 through slice-025). Implementing Romanian Producers Directory: DB schema, data layer, listing page, detail page.
+2026-05-30T22:47:54Z | E7 | Session started. Slicing E7 — 5 tasks (slice-026 through slice-030). Implementing Admin role system, dashboard, venue seed, producer seed, seed runner.
