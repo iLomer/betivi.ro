@@ -58,3 +58,15 @@ export interface Review {
   body: string | null;
   created_at: string;
 }
+
+export type ProducerCategory = "brewery" | "winery" | "distillery";
+
+export interface Producer {
+  id: string;
+  name: string;
+  category: ProducerCategory;
+  region: string;
+  description: string | null;
+  website: string | null;
+  created_at: string;
+}

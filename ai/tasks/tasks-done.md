@@ -22,6 +22,76 @@ UI components, data fetching, producer images.
 
 ---
 
+## [slice-025] -- Producer Detail Page
+**Epic:** E6 | **Size:** S | **Depends on:** slice-023
+Started: 2026-05-30 | Agent: meto-epic-E6
+Completed: 2026-05-30 | Files changed: src/app/(producers)/producatori/[id]/page.tsx
+Self-validated: PASS
+
+**User Story**
+As a visitor, I want to view a producer's full details so that I can learn about them and visit their website.
+
+**Acceptance Criteria**
+- [x] `/producatori/[id]` page shows producer name, category badge, region badge, full description, and link to website (if set)
+- [x] 404 returned if producer id does not exist (`notFound()`)
+- [x] Page metadata (title, description) set from producer data
+- [x] Back link to `/producatori` list
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+Producer reviews, venue associations, producer editing.
+
+---
+
+## [slice-024] -- Producers Listing Page
+**Epic:** E6 | **Size:** S | **Depends on:** slice-023
+Started: 2026-05-30 | Agent: meto-epic-E6
+Completed: 2026-05-30 | Files changed: src/app/(producers)/producatori/page.tsx, src/components/producers/ProducerCard.tsx, src/components/producers/ProducerFiltersBar.tsx
+Self-validated: PASS
+
+**User Story**
+As a visitor, I want to browse all Romanian producers and filter by category and region so that I can discover craft breweries, wineries, and distilleries.
+
+**Acceptance Criteria**
+- [x] `/producatori` page lists all producers from Supabase ordered by name
+- [x] Filter by category (berarie artizanală, cramă, distilerie)
+- [x] Filter by region (dropdown of distinct regions from DB)
+- [x] Each producer shows: name, category badge, region, description excerpt (max 120 chars)
+- [x] Link to producer detail page from each card
+- [x] Empty state shown when no producers match filters
+- [x] `ProducerCard` component at `src/components/producers/ProducerCard.tsx`
+- [x] `ProducerFiltersBar` component at `src/components/producers/ProducerFiltersBar.tsx`
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+Pagination, producer images, add producer form on this page.
+
+---
+
+## [slice-023] -- Producers Data Layer
+**Epic:** E6 | **Size:** S | **Depends on:** slice-022
+Started: 2026-05-30 | Agent: meto-epic-E6
+Completed: 2026-05-30 | Files changed: src/lib/producers/queries.ts, src/lib/producers/actions.ts
+Self-validated: PASS
+
+**User Story**
+As a developer, I want typed query and action functions for the producers directory so that the UI can read and write producers consistently.
+
+**Acceptance Criteria**
+- [x] `src/lib/producers/queries.ts` exports `getProducers(filters)` returning `Producer[]` ordered by name asc
+- [x] Filters support: category (brewery/winery/distillery), region (string ilike), search (name ilike)
+- [x] `src/lib/producers/queries.ts` exports `getProducerById(id)` returning `Producer | null`
+- [x] `src/lib/producers/queries.ts` exports `getDistinctRegions()` returning `string[]`
+- [x] `src/lib/producers/actions.ts` exports `createProducerAction(formData)` server action that inserts a producer and redirects unauthenticated users to `/auth/login`
+- [x] `createProducerAction` validates: name required, category required and one of brewery/winery/distillery, region required
+- [x] Error messages are in Romanian
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+UI components and page routing.
+
+---
+
 ## [slice-014] -- Drink Tracker DB Schema
 
 **Epic:** E4 | **Size:** S | **Depends on:** slice-004
