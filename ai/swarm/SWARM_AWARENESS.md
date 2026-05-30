@@ -62,6 +62,8 @@ Append only. Never delete entries. One line per checkpoint.
 2026-05-30T23:50:00Z | E1 | done:5 | status:complete | cycles:1 | blocker:none
 2026-05-30T23:20:00Z | E2 | done:3 | status:on-track | cycles:0 | blocker:none
 2026-05-30T23:30:00Z | E2 | done:5 | status:testing-ready | cycles:0 | blocker:none
+2026-05-30T23:58:00Z | E2 | done:3 | status:on-track | cycles:1 | blocker:slice-007 slice-010 failed validation
+2026-05-30T00:00:00Z | E2 | done:5 | status:testing-ready | cycles:1 | blocker:none
 2026-05-30T23:55:00Z | E3 | done:3 | status:testing-ready | cycles:0 | blocker:none
 
 ---

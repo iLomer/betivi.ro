@@ -49,6 +49,7 @@ export default async function HartaPage({ searchParams }: PageProps) {
         currentCity={city}
         currentCategory={rawCategory}
         currentSearch={search}
+        basePath="/harta"
       />
 
       <div className="mt-6">
