@@ -1,12 +1,6 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "crons": [
-    {
-      "path": "/api/health",
-      "schedule": "0 * * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
