@@ -18,22 +18,23 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
+  if (!session) {
     redirect("/auth/login?redirectTo=/profile");
   }
 
+  const userId = session.user.id;
   const [profile, stats, allLogs] = await Promise.all([
-    getProfileByUserId(user.id),
-    getDrinkStats(user.id),
-    getDrinkLogsByUserId(user.id),
+    getProfileByUserId(userId),
+    getDrinkStats(userId),
+    getDrinkLogsByUserId(userId),
   ]);
 
   const recentLogs = allLogs.slice(0, 5);
   const badges = getEarnedBadges(stats);
-  const displayName = profile?.username ?? user.email ?? "Betivan";
+  const displayName = profile?.username ?? session.user.email ?? "Betivan";
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
@@ -41,7 +42,7 @@ export default async function ProfilePage() {
         <div>
           <h1 className="text-2xl font-bold text-surface-900">{displayName}</h1>
           {profile?.username && (
-            <p className="mt-0.5 text-sm text-surface-500">{user.email}</p>
+            <p className="mt-0.5 text-sm text-surface-500">{session.user.email}</p>
           )}
         </div>
         <Link
@@ -63,7 +64,7 @@ export default async function ProfilePage() {
         <h2 className="mb-4 text-lg font-semibold text-surface-800">
           Cardul ANBR
         </h2>
-        <ANBRCard userId={user.id} displayName={displayName} stats={stats} badges={badges} />
+        <ANBRCard userId={userId} displayName={displayName} stats={stats} badges={badges} />
       </section>
 
       <section className="mb-8">

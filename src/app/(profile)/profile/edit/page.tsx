@@ -12,14 +12,14 @@ export const metadata: Metadata = {
 export default async function EditProfilePage() {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
+  if (!session) {
     redirect("/auth/login?redirectTo=/profile/edit");
   }
 
-  const profile = await getProfileByUserId(user.id);
+  const profile = await getProfileByUserId(session.user.id);
 
   return (
     <main className="mx-auto max-w-lg px-4 py-10">
