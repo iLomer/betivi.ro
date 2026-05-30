@@ -133,30 +133,6 @@ Actual map rendering, venue CRUD UI, and seeding data.
 
 ---
 
-## [slice-007] -- Venue Listing Page with Filter & Search
-**Epic:** E2 | **Size:** M | **Depends on:** slice-006
-Started: 2026-05-30 | Agent: meto-epic-E2
-Completed: 2026-05-30 | Files changed: src/app/(venues)/venues/page.tsx, src/lib/venues/queries.ts, src/components/map/VenueCard.tsx, src/components/map/VenueFiltersBar.tsx, src/components/map/VenueCategoryBadge.tsx, src/components/map/StarRating.tsx
-Self-validated: PASS
-
-**User Story**
-As a visitor, I want to browse all venues and filter by city and category so that I can discover drinking spots relevant to me.
-
-**Acceptance Criteria**
-- [x] `/venues` page lists all venues from Supabase ordered by rating
-- [x] Filter by city (dropdown of distinct cities from DB)
-- [x] Filter by category (bar, berarie, cramă, terasă, club, restaurant)
-- [x] Search by name/address (free text)
-- [x] Each venue shows: name, city, address, category badge, star rating, review count
-- [x] Link to add new venue visible on the page
-- [x] Empty state shown when no venues match filters
-- [x] `npm run build` passes with zero errors
-
-**Out of Scope**
-Pagination, venue images, and map view on this page.
-
----
-
 ## [slice-008] -- Venue Detail Page
 **Epic:** E2 | **Size:** S | **Depends on:** slice-006
 Started: 2026-05-30 | Agent: meto-epic-E2
@@ -203,11 +179,42 @@ Image upload, venue editing, admin approval workflow.
 
 ---
 
+
+**Out of Scope**
+Geolocation (user's current position), clustering of markers, and map-based radius search.
+
+---
+
+## [slice-007] -- Venue Listing Page with Filter & Search
+**Epic:** E2 | **Size:** M | **Depends on:** slice-006
+Started: 2026-05-30 | Agent: meto-epic-E2
+Completed: 2026-05-30 | Files changed: src/components/map/VenueFiltersBar.tsx
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 9/9
+
+**User Story**
+As a visitor, I want to browse all venues and filter by city and category so that I can discover drinking spots relevant to me.
+
+**Acceptance Criteria**
+- [x] `/venues` page lists all venues from Supabase ordered by rating
+- [x] Filter by city (dropdown of distinct cities from DB)
+- [x] Filter by category (bar, berarie, cramă, terasă, club, restaurant)
+- [x] Search by name/address (free text)
+- [x] Each venue shows: name, city, address, category badge, star rating, review count
+- [x] Link to add new venue visible on the page
+- [x] Empty state shown when no venues match filters
+- [x] `npm run build` passes with zero errors
+- [x] `VenueFiltersBar` function body under 50 lines
+
+**Out of Scope**
+Pagination, venue images, and map view on this page.
+
+---
+
 ## [slice-010] -- Interactive Map (Harta birturilor)
 **Epic:** E2 | **Size:** M | **Depends on:** slice-006
 Started: 2026-05-30 | Agent: meto-epic-E2
-Completed: 2026-05-30 | Files changed: src/app/(venues)/harta/page.tsx, src/components/map/VenueMap.tsx, src/components/map/VenueMapLoader.tsx, package.json
-Self-validated: PASS
+Completed: 2026-05-30 | Files changed: src/components/map/VenueFiltersBar.tsx, src/components/map/VenueMap.tsx, src/app/(venues)/harta/page.tsx
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 10/10
 
 **User Story**
 As a visitor, I want to see all venues on an interactive map so that I can discover nearby drinking spots visually.
@@ -216,14 +223,16 @@ As a visitor, I want to see all venues on an interactive map so that I can disco
 - [x] `/harta` page renders an interactive Leaflet map centered on Romania
 - [x] Venues with lat/lng coordinates appear as emoji markers on the map
 - [x] Clicking a marker shows a popup with venue name, city, address, and link to detail page
-- [x] Same filter bar (city, category, search) as the listing page
+- [x] Filter bar (city, category, search) navigates within `/harta` — does NOT redirect to `/venues`
 - [x] Map loads client-side only (ssr: false) via Client Component wrapper to avoid SSR errors
 - [x] Loading skeleton shown while map initialises
 - [x] Count of mappable vs total venues shown below the map
-- [x] `npm run build` passes with zero errors — verified above
+- [x] Map init errors show a user-visible error message instead of silently failing
+- [x] `npm run build` passes with zero errors
+- [x] `VenueMap` function body under 50 lines
 
 **Out of Scope**
-Geolocation (user's current position), clustering of markers, and map-based radius search.
+Geolocation, marker clustering, and map-based radius search.
 
 ---
 
