@@ -1,5 +1,37 @@
 # Tasks Done
 
+## [slice-031] -- Vercel Config
+**Epic:** E8 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E8
+Completed: 2026-05-30 | Files changed: vercel.json
+Self-validated: PASS
+
+---
+
+## [slice-032] -- Health Check Endpoint
+**Epic:** E8 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E8
+Completed: 2026-05-30 | Files changed: src/app/api/health/route.ts
+Self-validated: PASS
+
+---
+
+## [slice-033] -- Environment Variable Documentation
+**Epic:** E8 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E8
+Completed: 2026-05-30 | Files changed: .env.production.example
+Self-validated: PASS
+
+---
+
+## [slice-034] -- Error Boundary & 404 Page
+**Epic:** E8 | **Size:** S | **Depends on:** none
+Started: 2026-05-30 | Agent: meto-epic-E8
+Completed: 2026-05-30 | Files changed: src/app/error.tsx, src/app/not-found.tsx
+Self-validated: PASS
+
+---
+
 ## [slice-026] -- Admin Role System
 **Epic:** E7 | **Size:** S | **Depends on:** slice-004
 Started: 2026-05-30 | Agent: lead
@@ -45,6 +77,7 @@ Self-validated: PASS
 Started: 2026-05-30 | Agent: meto-epic-E6
 Completed: 2026-05-30 | Files changed: supabase/migrations/20240006000000_create_producers.sql, src/types/database.ts
 Self-validated: PASS
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 10/10
 
 **User Story**
 As a developer, I want a `producers` table with RLS policies so that producers can be stored and read publicly.
@@ -67,6 +100,7 @@ UI components, data fetching, producer images.
 Started: 2026-05-30 | Agent: meto-epic-E6
 Completed: 2026-05-30 | Files changed: src/app/(producers)/producatori/[id]/page.tsx
 Self-validated: PASS
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 10/10
 
 **User Story**
 As a visitor, I want to view a producer's full details so that I can learn about them and visit their website.
@@ -88,6 +122,7 @@ Producer reviews, venue associations, producer editing.
 Started: 2026-05-30 | Agent: meto-epic-E6
 Completed: 2026-05-30 | Files changed: src/app/(producers)/producatori/page.tsx, src/components/producers/ProducerCard.tsx, src/components/producers/ProducerFiltersBar.tsx
 Self-validated: PASS
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 10/10
 
 **User Story**
 As a visitor, I want to browse all Romanian producers and filter by category and region so that I can discover craft breweries, wineries, and distilleries.
@@ -113,6 +148,7 @@ Pagination, producer images, add producer form on this page.
 Started: 2026-05-30 | Agent: meto-epic-E6
 Completed: 2026-05-30 | Files changed: src/lib/producers/queries.ts, src/lib/producers/actions.ts
 Self-validated: PASS
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 10/10
 
 **User Story**
 As a developer, I want typed query and action functions for the producers directory so that the UI can read and write producers consistently.
