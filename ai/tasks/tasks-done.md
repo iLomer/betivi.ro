@@ -1,5 +1,45 @@
 # Tasks Done
 
+## [slice-026] -- Admin Role System
+**Epic:** E7 | **Size:** S | **Depends on:** slice-004
+Started: 2026-05-30 | Agent: lead
+Completed: 2026-05-30 | Files changed: supabase/migrations/20240007000000_add_admin_role.sql, src/lib/admin/auth.ts
+Self-validated: PASS
+
+---
+
+## [slice-027] -- Admin Dashboard
+**Epic:** E7 | **Size:** S | **Depends on:** slice-026
+Started: 2026-05-30 | Agent: lead
+Completed: 2026-05-30 | Files changed: src/app/(admin)/admin/page.tsx, src/lib/admin/queries.ts
+Self-validated: PASS
+
+---
+
+## [slice-028] -- Venue Seed Script
+**Epic:** E7 | **Size:** S | **Depends on:** slice-004
+Started: 2026-05-30 | Agent: lead
+Completed: 2026-05-30 | Files changed: scripts/seed/venues.ts
+Self-validated: PASS
+
+---
+
+## [slice-029] -- Producer Seed Script
+**Epic:** E7 | **Size:** S | **Depends on:** slice-022
+Started: 2026-05-30 | Agent: lead
+Completed: 2026-05-30 | Files changed: scripts/seed/producers.ts
+Self-validated: PASS
+
+---
+
+## [slice-030] -- Seed Runner
+**Epic:** E7 | **Size:** S | **Depends on:** slice-028, slice-029
+Started: 2026-05-30 | Agent: lead
+Completed: 2026-05-30 | Files changed: scripts/seed/run.ts, package.json
+Self-validated: PASS
+
+---
+
 ## [slice-022] -- Producers DB Schema
 **Epic:** E6 | **Size:** S | **Depends on:** slice-004
 Started: 2026-05-30 | Agent: meto-epic-E6
@@ -589,3 +629,21 @@ As an authenticated user, I want to submit, update, or delete my review for a ve
 
 **Out of Scope**
 Image upload, review moderation, and review pagination.
+
+## [slice-017] -- Drink Tracker Dashboard
+**Epic:** E4 | **Size:** M | **Depends on:** slice-015, slice-016
+Started: 2026-05-30 | Agent: meto-epic-E4
+Completed: 2026-05-30 | Files changed: src/app/(tracker)/tracker/page.tsx, src/components/tracker/DrinkStats.tsx, src/components/tracker/FillingGlass.tsx, src/components/tracker/DrinkList.tsx
+Tester-validated: 2026-05-30 | Result: PASS | Checks: 8/8
+
+**Acceptance Criteria**
+- [x] /tracker requires auth, redirects to /auth/login if not logged in
+- [x] DrinkStats shows total, beer, wine, spirit counts
+- [x] FillingGlass SVG fills at milestones 10/25/50/100 drinks
+- [x] DrinkList renders name, category badge, producer, rating, date, delete button
+- [x] Delete calls deleteDrinkLogAction and revalidates /tracker
+- [x] Link to /tracker/log shown prominently
+- [x] Empty state shown when no drinks logged
+- [x] npm run build passes with zero errors
+
+---
