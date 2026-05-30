@@ -23,7 +23,7 @@
 | E2 | Venue Map & Discovery | @meto-epic-E2 | complete | 5 | none |
 | E3 | Reviews & Ratings | @meto-epic-E3 | complete | 3 | none |
 | E4 | Drink Tracker | @meto-epic-E4 | complete | 4 | none |
-| E5 | Betiv Profile & ANBR Card | @meto-epic-E5 | testing-ready | 4 | none |
+| E5 | Betiv Profile & ANBR Card | @meto-epic-E5 | complete | 4 | none |
 | E6 | Romanian Producers Directory | @meto-epic-E6 | complete | 4 | none |
 | E7 | Admin & Content Seeding | @meto-epic-E7 | complete | 5 | none |
 | E8 | Production Deployment & Observability | @meto-epic-E8 | complete | 4 | none |
@@ -70,6 +70,7 @@ Append only. Never delete entries. One line per checkpoint.
 2026-05-30T23:05:00Z | E4 | done:3 | status:testing-ready | cycles:0 | blocker:none
 2026-05-30T00:20:00Z | E4 | done:4 | status:complete | cycles:2 | blocker:none
 2026-05-30T22:47:54Z | E5 | done:4 | status:testing-ready | cycles:0 | blocker:none
+2026-05-30T22:50:00Z | E5 | done:4 | status:complete | cycles:1 | blocker:none
 2026-05-30T23:10:00Z | E6 | done:4 | status:testing-ready | cycles:0 | blocker:none
 2026-05-30T00:30:00Z | E6 | done:4 | status:complete | cycles:1 | blocker:none
 2026-05-30T00:35:00Z | E8 | done:4 | status:complete | cycles:0 | blocker:none
