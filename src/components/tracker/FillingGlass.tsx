@@ -20,6 +20,30 @@ function getNextMilestone(total: number): number | null {
   return upcoming ?? null;
 }
 
+interface GlassSvgProps {
+  fillPct: number;
+  fillY: number;
+}
+
+function GlassSvg({ fillPct, fillY }: GlassSvgProps) {
+  return (
+    <svg width="80" height="130" viewBox="0 0 80 130" aria-label={`Pahar ${fillPct}% plin`} role="img">
+      <defs>
+        <clipPath id="glass-clip">
+          <polygon points="10,10 70,10 60,120 20,120" />
+        </clipPath>
+      </defs>
+      <polygon points="10,10 70,10 60,120 20,120" fill="none" stroke="#d1d5db" strokeWidth="2" />
+      {fillPct > 0 && (
+        <rect x="0" y={fillY} width="80" height="130" fill="#f59e0b" opacity="0.7" clipPath="url(#glass-clip)" />
+      )}
+      <text x="40" y="70" textAnchor="middle" fontSize="11" fontWeight="bold" fill={fillPct > 40 ? "#fff" : "#6b7280"}>
+        {fillPct}%
+      </text>
+    </svg>
+  );
+}
+
 interface FillingGlassProps {
   stats: DrinkStats;
 }
@@ -31,46 +55,7 @@ export function FillingGlass({ stats }: FillingGlassProps) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <svg
-        width="80"
-        height="130"
-        viewBox="0 0 80 130"
-        aria-label={`Pahar ${fillPct}% plin`}
-        role="img"
-      >
-        <defs>
-          <clipPath id="glass-clip">
-            <polygon points="10,10 70,10 60,120 20,120" />
-          </clipPath>
-        </defs>
-        <polygon
-          points="10,10 70,10 60,120 20,120"
-          fill="none"
-          stroke="#d1d5db"
-          strokeWidth="2"
-        />
-        {fillPct > 0 && (
-          <rect
-            x="0"
-            y={fillY}
-            width="80"
-            height="130"
-            fill="#f59e0b"
-            opacity="0.7"
-            clipPath="url(#glass-clip)"
-          />
-        )}
-        <text
-          x="40"
-          y="70"
-          textAnchor="middle"
-          fontSize="11"
-          fontWeight="bold"
-          fill={fillPct > 40 ? "#fff" : "#6b7280"}
-        >
-          {fillPct}%
-        </text>
-      </svg>
+      <GlassSvg fillPct={fillPct} fillY={fillY} />
       {nextMilestone !== null ? (
         <p className="text-xs text-surface-500">
           Mai ai {nextMilestone - stats.total} băuturi până la {nextMilestone}
