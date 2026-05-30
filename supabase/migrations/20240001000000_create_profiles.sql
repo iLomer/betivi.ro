@@ -1,0 +1,32 @@
+create table public.profiles (
+  id uuid references auth.users on delete cascade primary key,
+  username text unique,
+  avatar_url text,
+  created_at timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+
+create policy "Public profiles are viewable by everyone"
+  on public.profiles for select
+  using (true);
+
+create policy "Users can update own profile"
+  on public.profiles for update
+  using (auth.uid() = id);
+
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id) values (new.id);
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();

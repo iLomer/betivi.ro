@@ -9,8 +9,8 @@
 - **Project:** betivi
 - **Mode:** swarm
 - **Started:** *(date)*
-- **Total epics:** *(n)*
-- **Total tasks:** *(n)*
+- **Total epics:** 8
+- **Total tasks:** *(n — populated at swarm init)*
 - **Acceptance criteria:** 0 / 0 passed
 
 ---
@@ -19,7 +19,14 @@
 
 | Epic ID | Name | Agent | Status | Tasks Done | Blocker |
 |---|---|---|---|---|---|
-| *(populated at swarm init by @meto-pm)* | | | not-started | 0 | none |
+| E1 | Project Foundation & Auth | @meto-epic-E1 | testing-ready | 5 | none |
+| E2 | Venue Map & Discovery | @meto-epic-E2 | not-started | 0 | none |
+| E3 | Reviews & Ratings | @meto-epic-E3 | not-started | 0 | E1 |
+| E4 | Drink Tracker | @meto-epic-E4 | not-started | 0 | E1 |
+| E5 | Betiv Profile & ANBR Card | @meto-epic-E5 | not-started | 0 | E1, E4 |
+| E6 | Romanian Producers Directory | @meto-epic-E6 | not-started | 0 | E1 |
+| E7 | Admin & Content Seeding | @meto-epic-E7 | not-started | 0 | E2, E3 |
+| E8 | Production Deployment & Observability | @meto-epic-E8 | not-started | 0 | E7 |
 
 Status values: `not-started` · `on-track` · `blocked` · `testing-ready` · `complete`
 
@@ -31,7 +38,14 @@ See full ownership rules in `ai/swarm/domain-map.md`.
 
 | Epic ID | Owns |
 |---|---|
-| *(populated at swarm init by @meto-pm)* | |
+| E1 | `src/app/(auth)/`, `src/lib/supabase/`, `src/middleware.ts`, `supabase/migrations/` |
+| E2 | `src/app/(venues)/`, `src/components/map/`, `src/lib/venues/` |
+| E3 | `src/app/(reviews)/`, `src/components/reviews/`, `src/lib/reviews/` |
+| E4 | `src/app/(tracker)/`, `src/components/tracker/`, `src/lib/tracker/` |
+| E5 | `src/app/(profile)/`, `src/components/profile/`, `src/components/anbr-card/`, `src/lib/badges/` |
+| E6 | `src/app/(producers)/`, `src/components/producers/`, `src/lib/producers/` |
+| E7 | `src/app/(admin)/`, `src/lib/admin/`, `scripts/seed/` |
+| E8 | `vercel.json`, `.env.production`, `sentry.*.config.*`, monitoring config |
 
 ---
 
@@ -42,6 +56,9 @@ Append only. Never delete entries. One line per checkpoint.
 ```
 [ISO date] | [EPIC_ID] | done:[n] | status:[on-track/blocked/testing-ready] | cycles:[n] | blocker:[none or description]
 ```
+
+2026-05-30T22:47:00Z | E1 | done:4 | status:on-track | cycles:0 | blocker:none
+2026-05-30T23:00:00Z | E1 | done:5 | status:testing-ready | cycles:0 | blocker:none
 
 ---
 
@@ -60,3 +77,6 @@ Free text. Epic agents append observations, decisions, or notes here.
 ```
 [ISO date] | [EPIC_ID] | [note]
 ```
+
+2026-05-30T22:47:00Z | E1 | Completed slice-001 (Next.js scaffold), slice-002 (Supabase setup), slice-003 (auth pages), slice-004 (migrations). Slice-005 (middleware) in progress. Note: Migration files created but require manual application via Supabase dashboard — db password not available.
+2026-05-30T23:00:00Z | E1 | All 5 slices complete. npm run build passes with zero errors. E1 is testing-ready. Note: Next.js 16 uses proxy.ts instead of middleware.ts — slice-005 uses src/proxy.ts with export function proxy(). Migration files in supabase/migrations/ require manual application via Supabase SQL editor.
