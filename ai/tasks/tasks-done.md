@@ -1,5 +1,73 @@
 # Tasks Done
 
+## [slice-014] -- Drink Tracker DB Schema
+**Epic:** E4 | **Size:** S | **Depends on:** slice-004
+Started: 2026-05-30 | Agent: meto-epic-E4
+Completed: 2026-05-30 | Files changed: supabase/migrations/20240004000000_create_drink_logs.sql, src/types/database.ts
+Self-validated: PASS
+
+**User Story**
+As a developer, I want a `drink_logs` table with RLS policies so that authenticated users can record personal drink entries.
+
+**Acceptance Criteria**
+- [x] Migration creates `drink_logs` table: id (uuid pk), user_id (uuid fk auth.users), name (text not null), category (enum: beer/wine/spirit), producer (text nullable), venue_id (uuid nullable fk venues), rating (int 1-5 nullable), notes (text nullable), logged_at (timestamptz default now()), created_at (timestamptz default now())
+- [x] RLS: authenticated users can insert/select/update/delete their own rows only (user_id = auth.uid())
+- [x] `DrinkLog` TypeScript type added to `src/types/database.ts`
+- [x] `DrinkCategory` type exported from `src/types/database.ts`
+- [x] Migration file committed to `supabase/migrations/` following E1 naming convention
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+UI components, data fetching, and category-level statistics.
+
+---
+
+## [slice-015] -- Drink Tracker Data Layer
+**Epic:** E4 | **Size:** S | **Depends on:** slice-014
+Started: 2026-05-30 | Agent: meto-epic-E4
+Completed: 2026-05-30 | Files changed: src/lib/tracker/queries.ts, src/lib/tracker/actions.ts
+Self-validated: PASS
+
+**User Story**
+As a developer, I want typed query and action functions for the drink tracker so that the UI can read and write drink logs consistently.
+
+**Acceptance Criteria**
+- [x] `src/lib/tracker/queries.ts` exports `getDrinkLogsByUserId(userId)` returning `DrinkLog[]` ordered by logged_at desc
+- [x] `src/lib/tracker/queries.ts` exports `getDrinkStats(userId)` returning `{ total: number; beer: number; wine: number; spirit: number }`
+- [x] `src/lib/tracker/actions.ts` exports `logDrinkAction(formData)` server action that inserts a drink log and redirects unauthenticated users to `/auth/login`
+- [x] `src/lib/tracker/actions.ts` exports `deleteDrinkLogAction(id)` server action that deletes only the calling user's own log entry
+- [x] `logDrinkAction` validates: name required, category required and one of beer/wine/spirit, rating 1-5 if provided
+- [x] Error messages are in Romanian
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+UI components and page routing.
+
+---
+
+## [slice-016] -- Log a Drink Page & Form
+**Epic:** E4 | **Size:** S | **Depends on:** slice-015
+Started: 2026-05-30 | Agent: meto-epic-E4
+Completed: 2026-05-30 | Files changed: src/app/(tracker)/tracker/log/page.tsx, src/components/tracker/LogDrinkForm.tsx
+Self-validated: PASS
+
+**User Story**
+As an authenticated user, I want to log a drink with its name, category, optional producer, rating, and notes so that I can track what I've consumed.
+
+**Acceptance Criteria**
+- [x] `/tracker/log` page requires authentication — redirects to `/auth/login` if not logged in
+- [x] `src/components/tracker/LogDrinkForm.tsx` renders fields: drink name (required), category select (Beer/Vin/Spirit), producer (optional), rating star picker 1-5 (optional), notes textarea (optional)
+- [x] Form submits via `logDrinkAction` server action
+- [x] On success, redirects to `/tracker`
+- [x] Validation errors shown in Romanian below each field
+- [x] Submit button shows pending state
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+Venue linking, photo upload, and editing existing entries.
+
+---
+
 ## [slice-001] -- Initialize Next.js Project with TypeScript and Tailwind
 **Epic:** E1 | **Size:** S | **Depends on:** none
 Started: 2026-05-30 | Agent: meto-epic-E1
