@@ -16,12 +16,16 @@
 
 ## Epic Domains
 
-*(Populated by @meto-pm during swarm init based on confirmed epics)*
-
 | Epic ID | Epic Name | Owns | Shared With |
 |---|---|---|---|
-| E1 | *(name)* | *(paths)* | none |
-| E2 | *(name)* | *(paths)* | none |
+| E1 | Project Foundation & Auth | `src/app/(auth)/`, `src/lib/supabase/`, `src/middleware.ts`, `supabase/migrations/`, `src/types/` | package.json (shared) |
+| E2 | Venue Map & Discovery | `src/app/(venues)/`, `src/components/map/`, `src/lib/venues/` | supabase/migrations (E1 owns schema, E2 adds venue tables) |
+| E3 | Reviews & Ratings | `src/app/(reviews)/`, `src/components/reviews/`, `src/lib/reviews/` | none |
+| E4 | Drink Tracker | `src/app/(tracker)/`, `src/components/tracker/`, `src/lib/tracker/` | none |
+| E5 | Betiv Profile & ANBR Card | `src/app/(profile)/`, `src/components/profile/`, `src/components/anbr-card/`, `src/lib/badges/` | none |
+| E6 | Romanian Producers Directory | `src/app/(producers)/`, `src/components/producers/`, `src/lib/producers/` | none |
+| E7 | Admin & Content Seeding | `src/app/(admin)/`, `src/lib/admin/`, `scripts/seed/` | none |
+| E8 | Production Deployment & Observability | `vercel.json`, `.env.production`, `sentry.*.config.*`, monitoring config | vercel.json (E8 only) |
 
 ---
 
@@ -34,6 +38,27 @@ Files that multiple epics may need to touch. Epic agents must flag before editin
 | `package.json` | All epics may add deps | Flag in SWARM_AWARENESS, user approves |
 | `tsconfig.json` | Compiler config affects all | Flag in SWARM_AWARENESS, user approves |
 | `CLAUDE.md` | Project-wide context | Only @meto-pm writes |
+| `supabase/migrations/` | E1 owns schema; E2–E6 add their own tables | Each epic creates its own migration file; never modify another epic's migration |
+| `src/types/` | Shared TypeScript types | E1 owns the base types file; other epics add their own type files |
+| `src/app/layout.tsx` | Root layout used by all routes | Flag in SWARM_AWARENESS, coordinate changes |
+| `src/components/ui/` | Shared UI primitives (shadcn) | Any epic can add components; never edit another epic's components |
+
+---
+
+## Dependency Order
+
+Epics must complete in this order due to hard dependencies:
+
+```
+E1 (Auth + Foundation)
+  ├─► E2 (Venue Map)
+  ├─► E3 (Reviews) ─────────────► E7 (Admin + Seeding) ─► E8 (Deploy)
+  ├─► E4 (Drink Tracker)
+  │     └─► E5 (Betiv Profile)
+  └─► E6 (Producers Directory)
+```
+
+E1 must be fully complete before any other epic starts. E7 needs E2 + E3 done (venues and reviews exist to seed and moderate). E8 is always last.
 
 ---
 

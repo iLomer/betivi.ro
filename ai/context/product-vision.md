@@ -1,43 +1,153 @@
 # Product Vision — betivi
 
+**Version:** 0.1  
+**Date:** May 2025  
+**Source:** betivi-product-vision.md (ANBR Internal)
+
+---
+
 ## What We Are Building
-Betivi is a community platform built for Romania's drinking culture — a space where enthusiasts of craft beer, wine, spirits, and social drinking can connect, discover, and share experiences. The platform serves as a digital hub where Romanians can find drinking spots, share reviews, organize pub crawls, and build a community around their shared passion for good drinks and good company.
 
-The product matters because Romania has a vibrant but fragmented drinking culture. Local bars, craft breweries, wine cellars, and spirits producers lack a unified discovery layer, and enthusiasts have no dedicated community space to share recommendations, organize events, or follow others with similar taste. Betivi fills this gap by combining discovery, social interaction, and community-driven content in a single platform tailored to Romanian tastes and locations.
+betivi.ro is a community platform for alcohol drinkers in Romania built around three concrete things: **discovery** (find good places), **memory** (remember what you drank), and **identity** (belong to a community with a sense of humor).
 
-Betivi differentiates itself from generic review apps like TripAdvisor or Google Maps by focusing exclusively on the drinking community in Romania. It speaks the language — literally and culturally — of its users. Content moderation, local slang, regional drink specialties (tuică, palincă, local craft beer), and Romanian geography are all first-class citizens. This is not a global app with a Romanian filter; it is a Romanian app from the ground up.
+The tone is playful, but the utility is real. It is not a lifestyle app with Instagram filters, not a disguised advertisement, not a discount aggregator. It is the place where the Romanian who knows what they drink comes to find, log, and share.
 
-The platform will evolve from a discovery and review tool into a full community platform with user profiles, following/follower mechanics, event listings, and curated lists. The long-term vision is to become the authoritative source for drinking culture in Romania — the place where every bar owner wants their venue listed and every enthusiast checks before going out.
+---
 
 ## The Problem We Solve
-Romanians who enjoy social drinking — whether at craft beer bars, wine tastings, or local pubs — have no dedicated community platform to discover venues, share experiences, or connect with like-minded people. They rely on fragmented sources: Facebook groups with poor searchability, Google Maps reviews written for general audiences, or word-of-mouth. None of these provide a focused, culturally relevant experience for Romania's drinking community.
 
-Existing platforms like TripAdvisor and Untappd are either too generic or too internationally focused to serve the nuanced needs of Romanian drinkers. They lack coverage of local spirits like palincă and tuică, miss smaller regional venues, and offer no way to build a local community. Facebook groups offer community but no structured discovery. The result is that great local bars go undiscovered, events are poorly promoted, and enthusiasts have nowhere to build a reputation or following around their expertise.
+A Romanian who wants to discover a good pub in another city has nowhere to look seriously. TripAdvisor is for tourists. Google Maps is okay but lacks context. Facebook groups are chaos. Untappd is in English and completely ignores the Romanian context: beers from PET bottles, unmarked local pubs, attic-distilled palincă, small wineries in Oltenia.
+
+Romanian craft beer and wine are growing rapidly, but there is no place where the community can document and recommend them to each other.
+
+---
 
 ## Target Users
-people are drinking in romania
+
+**Primary:** Romanians aged 25–45 who drink thoughtfully, discover new places, appreciate craft beer or local wine, and have a sense of humor.
+
+**Secondary:** Tourists and expats who want to find authentic, non-tourist venues.
+
+**Tertiary:** Small producers (craft breweries, wineries) who want organic visibility without paying for ads.
+
+---
 
 ## Success Looks Like
+
 - New user can complete registration and post their first review within 3 minutes of landing on the site
-- At least 50 venues are listed at launch across 3+ Romanian cities (Cluj, București, Iași)
-- Venue detail pages load in under 2 seconds on a 4G mobile connection (measured via Lighthouse)
+- At least 50 venues listed at launch across 3+ Romanian cities (Cluj, București, Iași)
+- Venue detail pages load in under 2 seconds on a 4G mobile connection (Lighthouse)
 - Users can search for a venue by name or city and see results within 500ms
 - Each registered user can submit a venue review with a rating and text in under 60 seconds
-- Zero critical security vulnerabilities in Supabase RLS policies at launch (verified by manual audit)
+- Zero critical security vulnerabilities in Supabase RLS policies at launch (manual audit)
 - Mobile-responsive layout renders correctly on iOS Safari and Android Chrome without horizontal scroll
 - User authentication flow (sign-up, email confirmation, login) completes without errors across all supported browsers
 
+---
+
+## Product Principles
+
+**1. Useful before fun.**  
+Humor is the top layer, not the foundation. Strip all the jokes and the platform must still be valuable.
+
+**2. Community-generated content, system-curated.**  
+No editorial staff. Community adds venues and drinks. System filters via ratings, reviews, and light moderation.
+
+**3. Every feature must answer a real question.**  
+"Where do I drink in Cluj tomorrow night?" "What new Romanian beer is worth trying?" "What did I drink at Andrei's wedding?"  
+If a feature does not answer a question the user asks in real life, we do not build it.
+
+**4. Mobile-first, always.**  
+People drink at the pub with their phone in hand, not a laptop.
+
+---
+
+## MVP Features (Phase 1)
+
+### Venue Map (Harta birturilor)
+Interactive map of all pubs, breweries, wineries, and terraces in Romania. Each location has: type, rating, specialty, review count, address. User-generated: anyone can add a new venue, anyone can review. Simple moderation via community flagging.
+
+*Why it makes sense:* It is the most searched thing. "Where do we drink?" is the base question.
+
+### Drink Tracker
+Personal log of consumed drinks: name, producer, location, rating, notes. Visualized as a filling glass/mug. Split by category: beer, wine, spirits.
+
+*Why it makes sense:* Untappd has 10 million users. There is proven demand for this. The Romanian version does not exist.
+
+### Betiv Profile (Profilul de betiv)
+ANBR membership card with unique number, grade (Stagiar / Autorizat / Emerit / Academician), statistics (beers, wines, venues visited), earned badges. The card image is downloadable as PNG for WhatsApp Status.
+
+*Why it makes sense:* It is the platform's organic virality. People will share it on WhatsApp.
+
+### Romanian Producers Directory
+Catalog of Romanian breweries and wineries with their products. Linkable from the tracker: when you log a beer, you can view the producer's page.
+
+*Why it makes sense:* Completes the tracker and brings small producers onto the platform organically.
+
+---
+
+## Phase 2 Features (after MVP validation)
+
+### Pub Circuits (Circuite de birt)
+User-curated routes: "Top 5 craft beer bars in Cluj", "Dealu Mare winery tour", "Pubs that serve after midnight in Bucharest". Each circuit is a collection of venues with order and notes.
+
+### Minimal Social Feed
+Not a social network. An activity feed: what friends have been drinking, what new pubs appeared in your city, what badges others earned. Optional, not forced.
+
+### "Beer of the Month" / "Wine of the Month"
+One featured drink per month, chosen by community vote from drinks logged that month. Simple banner on homepage.
+
+### Pub Check-in
+"I am now at [Berea lui Dorel, Cluj]" visible on your profile and optionally in the feed. Expires after 4 hours.
+
+### Venue Detail Page
+Each map location gets a dedicated page: user-generated photos, menu if available, text reviews, community-voted "house specialty", list of users who have been there.
+
+---
+
+## What We Are NOT Building
+
+| Feature | Why Not |
+|---|---|
+| Blog / editorial | Costs time and money, does not scale, not core business |
+| Marketplace / delivery | A completely different business with different complexity |
+| Events / calendar | Who maintains it? Data expires, becomes garbage fast |
+| Chat / messaging | WhatsApp exists. We do not reinvent the wheel |
+| Stories / short content | If you want to post a beer on stories, use Instagram |
+| Points / virtual currency | Grades and badges are enough. Points complicate UX |
+| Native ads / sponsored content | Community credibility is worth more than early ad revenue |
+| Multi-language support | Romanian-only for v1 |
+| Native mobile apps | Web-only for v1 |
+| In-app payments or reservations | Out of scope for v1 |
+
+---
+
+## How the Platform Grows
+
+**Organic virality:** Downloadable ANBR membership card image. People will post it on WhatsApp Status and Instagram Story. Zero marketing costs.
+
+**Local SEO:** Every added venue is an indexable page. "Craft brewery Cluj" brought by the community, not by us.
+
+**Producers as allies:** Small breweries and wineries lack visibility. We give them a free page. They promote it to their audience. We gain content and traffic.
+
+**Retention loop:** Log a beer → glass fills up → earn a badge → share card → friend signs up.
+
+---
+
+## Monetization (later, not now)
+
+When the platform has real traction:
+
+- **Verified producer pages** (breweries, wineries): extended profile, logo, site link, search priority. Small monthly subscription.
+- **Betiv Premium**: extra features for passionate users, no ads. Detailed statistics, PDF journal export, card themes.
+- **Sponsored circuits**: a beer festival or winery can sponsor a themed circuit. Clearly marked as sponsored, never disguised.
+
+No display ads. No data sales. No aggressive freemium that blocks basic features.
+
+---
+
 ## Core Value Proposition
-Betivi is Romania's home for drinking culture — the one place to discover venues, share experiences, and connect with fellow enthusiasts.
 
-Unlike generic review platforms, Betivi is built specifically for the Romanian context, covering local spirits, regional bars, and the social rituals around drinking that matter to Romanian communities. It turns solitary outings into shared experiences and hidden gems into community favorites.
+betivi.ro is Romania's home for drinking culture — the one place to discover venues, log what you drink, and belong to a community that gets it.
 
-## Out of Scope (v1)
-- In-app payments, reservations, or table booking functionality
-- Native iOS or Android mobile applications (web-only for v1)
-- Venue owner dashboard or claimed listing management
-- Event creation and RSVP management for community events
-- Direct messaging or private chat between users
-- Integration with delivery services or e-commerce for purchasing drinks
-- Multi-language support (English or other languages) — Romanian only for v1
-- Automated content moderation or AI-generated review summaries
+*"Bem cu rost. Știm ce bem."* — We drink with purpose. We know what we drink.
