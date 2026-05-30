@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getVenueById } from "@/lib/venues/queries";
 import { VenueCategoryBadge } from "@/components/map/VenueCategoryBadge";
 import { StarRating } from "@/components/map/StarRating";
+import { ReviewSection } from "@/components/reviews/ReviewSection";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -82,14 +83,7 @@ export default async function VenueDetailPage({ params }: PageProps) {
         )}
       </div>
 
-      <div className="mt-8">
-        <h2 className="mb-4 text-lg font-semibold text-surface-900 dark:text-surface-50">
-          Recenzii
-        </h2>
-        <p className="text-sm text-surface-500 dark:text-surface-400">
-          Recenziile vor fi disponibile în curând.
-        </p>
-      </div>
+      <ReviewSection venueId={id} />
     </main>
   );
 }

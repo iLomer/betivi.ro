@@ -224,3 +224,48 @@ As a visitor, I want to see all venues on an interactive map so that I can disco
 
 **Out of Scope**
 Geolocation (user's current position), clustering of markers, and map-based radius search.
+
+---
+
+## [slice-011] — Reviews Data Layer
+**Epic:** E3 | **Size:** S | **Depends on:** slice-004
+Started: 2026-05-30 | Agent: meto-epic-E3
+Completed: 2026-05-30 | Files changed: src/lib/reviews/queries.ts, src/lib/reviews/actions.ts, supabase/migrations/20240003000000_reviews_unique_constraint.sql
+Self-validated: PASS
+
+**User Story**
+As a developer, I want a typed data layer for reviews so that review data can be fetched and mutated consistently across the application.
+
+**Acceptance Criteria**
+- [x] `src/lib/reviews/queries.ts` exports `getReviewsByVenueId(venueId)` returning `ReviewWithProfile[]`
+- [x] `ReviewWithProfile` type includes review fields plus `profiles.username`
+- [x] `src/lib/reviews/actions.ts` exports `submitReviewAction(formData)` server action that inserts or upserts a review and updates `venues.rating_avg` and `venues.review_count` via manual recalculation
+- [x] `submitReviewAction` redirects unauthenticated users to `/auth/login`
+- [x] `submitReviewAction` enforces one review per user per venue (upsert on conflict `venue_id,user_id`)
+- [x] `src/lib/reviews/actions.ts` exports `deleteReviewAction(reviewId, venueId)` that deletes the review and updates venue aggregates
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+UI components, routing, and image upload.
+
+---
+
+## [slice-012] — ReviewList Component
+**Epic:** E3 | **Size:** S | **Depends on:** slice-011
+Started: 2026-05-30 | Agent: meto-epic-E3
+Completed: 2026-05-30 | Files changed: src/components/reviews/ReviewList.tsx
+Self-validated: PASS
+
+**User Story**
+As a visitor, I want to see all reviews for a venue on its detail page so that I can read community opinions before visiting.
+
+**Acceptance Criteria**
+- [x] `src/components/reviews/ReviewList.tsx` renders a list of reviews for a venue
+- [x] Each review shows: star rating (1–5), review body text, username, and formatted date
+- [x] Empty state shown when venue has no reviews yet
+- [x] `src/app/(venues)/venues/[id]/page.tsx` imports and renders `<ReviewSection venueId={id} />` (which includes ReviewList, replacing the placeholder text)
+- [x] Component handles empty state gracefully with appropriate message
+- [x] `npm run build` passes with zero errors
+
+**Out of Scope**
+Review submission form (slice-013), review editing, and pagination.
