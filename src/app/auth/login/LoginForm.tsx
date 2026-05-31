@@ -1,18 +1,40 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { loginAction, type LoginState } from "./actions";
-
-const initial: LoginState = { error: null };
 
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
-  const [state, formAction, pending] = useActionState(loginAction, initial);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const data = new FormData(e.currentTarget);
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: data.get("email"),
+        password: data.get("password"),
+      }),
+    });
+
+    if (!res.ok) {
+      const body = (await res.json()) as { error: string };
+      setError(body.error);
+      setLoading(false);
+      return;
+    }
+
+    // Hard navigation so the browser sends the fresh session cookies
+    window.location.href = redirectTo;
+  }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
-      <input type="hidden" name="redirectTo" value={redirectTo} />
-
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
         <label
           htmlFor="email"
@@ -45,18 +67,18 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         />
       </div>
 
-      {state.error && (
+      {error && (
         <p className="border border-red-800/40 bg-red-900/20 px-3 py-2 text-sm text-red-400">
-          {state.error}
+          {error}
         </p>
       )}
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={loading}
         className="bg-brand-500 px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-surface-900 transition-colors hover:bg-brand-400 disabled:opacity-50"
       >
-        {pending ? "Se procesează..." : "Intră în cont"}
+        {loading ? "Se procesează..." : "Intră în cont"}
       </button>
 
       <p className="text-center text-sm text-surface-500">

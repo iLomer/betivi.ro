@@ -1,9 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
-async function handleLogout(request: NextRequest) {
-  const origin = new URL(request.url).origin;
-  const response = NextResponse.redirect(`${origin}/`);
+export async function POST(request: NextRequest) {
+  const { email, password } = (await request.json()) as {
+    email: string;
+    password: string;
+  };
+
+  const response = NextResponse.json({ ok: true });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,14 +26,14 @@ async function handleLogout(request: NextRequest) {
     }
   );
 
-  await supabase.auth.signOut();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    return NextResponse.json(
+      { error: "Email sau parolă incorectă. Încearcă din nou." },
+      { status: 401 }
+    );
+  }
+
   return response;
-}
-
-export async function GET(request: NextRequest) {
-  return handleLogout(request);
-}
-
-export async function POST(request: NextRequest) {
-  return handleLogout(request);
 }
