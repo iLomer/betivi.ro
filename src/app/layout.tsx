@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   description: "Descoperă baruri, cramă, berării și locuri de băut din România.",
 };
 
+const NAV_LINKS = [
+  { href: "/venues", label: "Locații" },
+  { href: "/harta", label: "Harta" },
+  { href: "/tracker", label: "Tracker" },
+  { href: "/producatori", label: "Producători" },
+];
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -29,29 +36,64 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
+  const displayName =
+    (user?.user_metadata?.display_name as string | undefined) ??
+    user?.email?.split("@")[0] ??
+    null;
+
   return (
     <html
       lang="ro"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        <nav className="border-b border-surface-200 bg-white px-6 py-3 dark:border-surface-700 dark:bg-surface-900">
-          <div className="mx-auto flex max-w-5xl items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-bold text-brand-600 hover:text-brand-700"
-            >
-              Betivi
+      <body className="flex min-h-full flex-col bg-surface-900 text-surface-100">
+        <nav className="sticky top-0 z-50 border-b border-surface-700/50 bg-surface-900/80 backdrop-blur-md">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-12">
+            {/* Wordmark */}
+            <Link href="/" className="group flex items-baseline gap-1">
+              <span
+                className="text-xl font-black tracking-tight transition-colors group-hover:text-brand-300"
+                style={{
+                  background:
+                    "linear-gradient(90deg, #f59e0b, #fbbf24)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Betivi
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-surface-600">
+                .ro
+              </span>
             </Link>
+
+            {/* Nav links — hidden on small screens */}
+            <div className="hidden items-center gap-6 md:flex">
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="text-sm font-medium text-surface-400 transition-colors hover:text-surface-100"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Auth */}
             <div className="flex items-center gap-4">
               {user ? (
                 <>
-                  <span className="text-sm text-surface-600 dark:text-surface-400">
-                    {user.email}
-                  </span>
+                  <Link
+                    href="/profile"
+                    className="hidden text-sm font-medium text-surface-400 transition-colors hover:text-surface-100 md:block"
+                  >
+                    {displayName}
+                  </Link>
                   <Link
                     href="/auth/logout"
-                    className="text-sm font-medium text-surface-700 hover:text-brand-600 dark:text-surface-300"
+                    className="text-xs font-semibold uppercase tracking-widest text-surface-600 transition-colors hover:text-brand-400"
                   >
                     Ieși
                   </Link>
@@ -59,7 +101,7 @@ export default async function RootLayout({
               ) : (
                 <Link
                   href="/auth/login"
-                  className="text-sm font-medium text-surface-700 hover:text-brand-600 dark:text-surface-300"
+                  className="border border-brand-500/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400 transition-colors hover:border-brand-400 hover:text-brand-300"
                 >
                   Intră
                 </Link>
