@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { SessionRefresher } from "@/components/SessionRefresher";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -101,6 +102,7 @@ export default async function RootLayout({
             </div>
           </div>
         </nav>
+        <SessionRefresher />
         {children}
       </body>
     </html>
