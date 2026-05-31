@@ -14,14 +14,14 @@ export const metadata = {
 export default async function TrackerPage() {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  if (!user) {
+  if (!session) {
     redirect("/auth/login?redirectTo=/tracker");
   }
 
-  const userId = user.id;
+  const userId = session.user.id;
   const [logs, stats] = await Promise.all([
     getDrinkLogsByUserId(userId),
     getDrinkStats(userId),
