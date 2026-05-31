@@ -10,10 +10,10 @@ export const metadata = {
 export default async function LogDrinkPage() {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     redirect("/auth/login?redirectTo=/tracker/log");
   }
 

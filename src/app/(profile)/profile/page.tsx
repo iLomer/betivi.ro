@@ -18,14 +18,14 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const supabase = await createClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     redirect("/auth/login?redirectTo=/profile");
   }
 
-  const userId = session.user.id;
+  const userId = user.id;
   const [profile, stats, allLogs] = await Promise.all([
     getProfileByUserId(userId),
     getDrinkStats(userId),
@@ -34,7 +34,7 @@ export default async function ProfilePage() {
 
   const recentLogs = allLogs.slice(0, 5);
   const badges = getEarnedBadges(stats);
-  const displayName = profile?.username ?? session.user.email ?? "Betivan";
+  const displayName = profile?.username ?? user.email ?? "Betivan";
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
@@ -42,7 +42,7 @@ export default async function ProfilePage() {
         <div>
           <h1 className="text-2xl font-bold text-surface-900">{displayName}</h1>
           {profile?.username && (
-            <p className="mt-0.5 text-sm text-surface-500">{session.user.email}</p>
+            <p className="mt-0.5 text-sm text-surface-500">{user.email}</p>
           )}
         </div>
         <Link

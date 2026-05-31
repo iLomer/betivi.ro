@@ -82,12 +82,20 @@ export default async function RootLayout({
                   </Link>
                 </>
               ) : (
-                <Link
-                  href="/auth/signup"
-                  className="border border-brand-500 px-5 py-2 text-xs font-bold uppercase tracking-widest text-brand-400 transition-colors hover:bg-brand-500 hover:text-surface-900"
-                >
-                  Devino Membru
-                </Link>
+                <>
+                  <Link
+                    href="/auth/login"
+                    className="hidden text-sm font-medium text-surface-400 transition-colors hover:text-brand-400 md:block"
+                  >
+                    Intră
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="border border-brand-500 px-5 py-2 text-xs font-bold uppercase tracking-widest text-brand-400 transition-colors hover:bg-brand-500 hover:text-surface-900"
+                  >
+                    Devino Membru
+                  </Link>
+                </>
               )}
             </div>
           </div>
