@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 import { getDrinkLogsByUserId, getDrinkStats } from "@/lib/tracker/queries";
 import { DrinkStatsPanel } from "@/components/tracker/DrinkStats";
 import { FillingGlass } from "@/components/tracker/FillingGlass";
@@ -12,16 +12,11 @@ export const metadata = {
 };
 
 export default async function TrackerPage() {
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const userId = (await headers()).get("x-user-id");
 
-  if (!session) {
+  if (!userId) {
     redirect("/auth/login?redirectTo=/tracker");
   }
-
-  const userId = session.user.id;
   const [logs, stats] = await Promise.all([
     getDrinkLogsByUserId(userId),
     getDrinkStats(userId),

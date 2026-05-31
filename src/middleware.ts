@@ -1,7 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PROTECTED_PREFIXES = ["/profile", "/tracker", "/venues/new", "/review/new"];
+
 export async function middleware(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -16,7 +19,9 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({ request });
+          supabaseResponse = NextResponse.next({
+            request: { headers: requestHeaders },
+          });
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -25,8 +30,28 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Refresh the session — do NOT add any logic before this call.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+
+  if (user) {
+    // Pass user ID via header so Server Components never need to re-validate
+    requestHeaders.set("x-user-id", user.id);
+    requestHeaders.set("x-user-email", user.email ?? "");
+    if (!(supabaseResponse.headers.get("x-user-id"))) {
+      supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } });
+    }
+  }
+
+  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  if (!user && isProtected) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/login";
+    url.searchParams.set("redirectTo", pathname);
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

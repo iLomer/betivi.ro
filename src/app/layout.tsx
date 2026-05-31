@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 import { SessionRefresher } from "@/components/SessionRefresher";
 import "./globals.css";
 
@@ -21,16 +21,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const user = session?.user ?? null;
-  const displayName =
-    (user?.user_metadata?.display_name as string | undefined) ??
-    user?.email?.split("@")[0] ??
-    null;
+  const hdrs = await headers();
+  const userId = hdrs.get("x-user-id");
+  const userEmail = hdrs.get("x-user-email") ?? "";
+  const displayName = userEmail.split("@")[0] || null;
 
   return (
     <html
@@ -57,7 +51,7 @@ export default async function RootLayout({
                 { href: "/", label: "Acasă" },
                 { href: "/harta", label: "Harta Birturilor" },
                 { href: "/tracker", label: "Tracker" },
-                ...(user ? [{ href: "/profile", label: "Profilul Meu" }] : []),
+                ...(userId ? [{ href: "/profile", label: "Profilul Meu" }] : []),
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -71,7 +65,7 @@ export default async function RootLayout({
 
             {/* Right CTA */}
             <div className="flex items-center gap-3">
-              {user ? (
+              {userId ? (
                 <>
                   <span className="hidden text-sm text-surface-400 md:block">
                     {displayName}

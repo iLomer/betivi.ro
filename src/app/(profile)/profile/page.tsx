@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDrinkLogsByUserId, getDrinkStats } from "@/lib/tracker/queries";
@@ -16,16 +17,13 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const hdrs = await headers();
+  const userId = hdrs.get("x-user-id");
+  const userEmail = hdrs.get("x-user-email") ?? "";
 
-  if (!session) {
+  if (!userId) {
     redirect("/auth/login?redirectTo=/profile");
   }
-
-  const userId = session.user.id;
   const [profile, stats, allLogs] = await Promise.all([
     getProfileByUserId(userId),
     getDrinkStats(userId),
@@ -34,7 +32,7 @@ export default async function ProfilePage() {
 
   const recentLogs = allLogs.slice(0, 5);
   const badges = getEarnedBadges(stats);
-  const displayName = profile?.username ?? session.user.email ?? "Betivan";
+  const displayName = profile?.username ?? userEmail ?? "Betivan";
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
@@ -42,7 +40,7 @@ export default async function ProfilePage() {
         <div>
           <h1 className="text-2xl font-bold text-surface-900">{displayName}</h1>
           {profile?.username && (
-            <p className="mt-0.5 text-sm text-surface-500">{session.user.email}</p>
+            <p className="mt-0.5 text-sm text-surface-500">{userEmail}</p>
           )}
         </div>
         <Link

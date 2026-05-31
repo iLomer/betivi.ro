@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 import { LogDrinkForm } from "@/components/tracker/LogDrinkForm";
 
 export const metadata = {
@@ -8,12 +8,9 @@ export const metadata = {
 };
 
 export default async function LogDrinkPage() {
-  const supabase = await createClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const userId = (await headers()).get("x-user-id");
 
-  if (!session) {
+  if (!userId) {
     redirect("/auth/login?redirectTo=/tracker/log");
   }
 
