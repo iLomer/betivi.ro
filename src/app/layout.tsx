@@ -22,9 +22,10 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const supabase = await createClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
 
+  const user = session?.user ?? null;
   const displayName =
     (user?.user_metadata?.display_name as string | undefined) ??
     user?.email?.split("@")[0] ??
