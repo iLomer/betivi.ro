@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -19,18 +17,9 @@ export const metadata: Metadata = {
   description: "Descoperă baruri, cramă, berării și locuri de băut din România.",
 };
 
-const NAV_LINKS = [
-  { href: "/venues", label: "Locații" },
-  { href: "/harta", label: "Harta" },
-  { href: "/tracker", label: "Tracker" },
-  { href: "/producatori", label: "Producători" },
-];
-
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -44,66 +33,60 @@ export default async function RootLayout({
   return (
     <html
       lang="ro"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-surface-900 text-surface-100">
-        <nav className="sticky top-0 z-50 border-b border-surface-700/50 bg-surface-900/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-12">
+        <nav className="sticky top-0 z-50 border-b border-surface-700/60 bg-surface-900/90 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
             {/* Wordmark */}
-            <Link href="/" className="group flex items-baseline gap-1">
+            <Link href="/" className="flex items-center gap-2 group">
+              <span className="text-xl">🍺</span>
               <span
-                className="text-xl font-black tracking-tight transition-colors group-hover:text-brand-300"
-                style={{
-                  background:
-                    "linear-gradient(90deg, #f59e0b, #fbbf24)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
+                className="text-lg font-bold tracking-tight text-brand-400 transition-colors group-hover:text-brand-300"
+                style={{ fontFamily: "var(--font-playfair)" }}
               >
-                Betivi
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-surface-600">
-                .ro
+                betivi.ro
               </span>
             </Link>
 
-            {/* Nav links — hidden on small screens */}
-            <div className="hidden items-center gap-6 md:flex">
-              {NAV_LINKS.map(({ href, label }) => (
+            {/* Center links */}
+            <div className="hidden items-center gap-8 md:flex">
+              {[
+                { href: "/", label: "Acasă" },
+                { href: "/harta", label: "Harta Birturilor" },
+                { href: "/tracker", label: "Tracker" },
+                ...(user ? [{ href: "/profile", label: "Profilul Meu" }] : []),
+              ].map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="text-sm font-medium text-surface-400 transition-colors hover:text-surface-100"
+                  className="text-sm font-medium text-surface-300 transition-colors hover:text-brand-400"
                 >
                   {label}
                 </Link>
               ))}
             </div>
 
-            {/* Auth */}
-            <div className="flex items-center gap-4">
+            {/* Right CTA */}
+            <div className="flex items-center gap-3">
               {user ? (
                 <>
-                  <Link
-                    href="/profile"
-                    className="hidden text-sm font-medium text-surface-400 transition-colors hover:text-surface-100 md:block"
-                  >
+                  <span className="hidden text-sm text-surface-400 md:block">
                     {displayName}
-                  </Link>
+                  </span>
                   <Link
                     href="/auth/logout"
-                    className="text-xs font-semibold uppercase tracking-widest text-surface-600 transition-colors hover:text-brand-400"
+                    className="border border-surface-600 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-surface-400 transition-colors hover:border-brand-500 hover:text-brand-400"
                   >
                     Ieși
                   </Link>
                 </>
               ) : (
                 <Link
-                  href="/auth/login"
-                  className="border border-brand-500/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400 transition-colors hover:border-brand-400 hover:text-brand-300"
+                  href="/auth/signup"
+                  className="border border-brand-500 px-5 py-2 text-xs font-bold uppercase tracking-widest text-brand-400 transition-colors hover:bg-brand-500 hover:text-surface-900"
                 >
-                  Intră
+                  Devino Membru
                 </Link>
               )}
             </div>

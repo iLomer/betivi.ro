@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +30,8 @@ export default function LoginPage() {
 
     const params = new URLSearchParams(window.location.search);
     const redirectTo = params.get("redirectTo") ?? "/";
-    router.push(redirectTo);
-    router.refresh();
+    // Hard reload so the server picks up the fresh session cookies
+    window.location.href = redirectTo;
   }
 
   return (
