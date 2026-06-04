@@ -4,23 +4,29 @@ interface ProfileStatsProps {
   stats: DrinkStats;
 }
 
-export function ProfileStats({ stats }: ProfileStatsProps) {
-  const items = [
-    { label: "Total", value: stats.total },
-    { label: "Bere", value: stats.beer },
-    { label: "Vin", value: stats.wine },
-    { label: "Spirtoase", value: stats.spirit },
-  ];
+const ITEMS = [
+  { key: "total" as const, label: "Total", highlight: true },
+  { key: "beer"  as const, label: "Bere" },
+  { key: "wine"  as const, label: "Vin" },
+  { key: "spirit" as const, label: "Spirtoase" },
+];
 
+export function ProfileStats({ stats }: ProfileStatsProps) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {items.map(({ label, value }) => (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {ITEMS.map(({ key, label, highlight }) => (
         <div
-          key={label}
-          className="rounded-xl border border-surface-200 bg-white p-4 text-center shadow-sm"
+          key={key}
+          className={`rounded-xl border p-4 text-center ${
+            highlight
+              ? "border-brand-700/40 bg-brand-950/30"
+              : "border-surface-700/60 bg-surface-800/50"
+          }`}
         >
-          <p className="text-2xl font-bold text-brand-600">{value}</p>
-          <p className="mt-1 text-sm text-surface-600">{label}</p>
+          <p className={`text-3xl font-bold ${highlight ? "text-brand-400" : "text-surface-100"}`}>
+            {stats[key]}
+          </p>
+          <p className="mt-1 text-xs text-surface-500">{label}</p>
         </div>
       ))}
     </div>

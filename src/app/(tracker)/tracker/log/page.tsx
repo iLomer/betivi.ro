@@ -16,7 +16,7 @@ export default async function LogDrinkPage() {
 
   return (
     <main className="mx-auto max-w-lg px-4 py-10">
-      <h1 className="mb-8 text-2xl font-bold text-surface-900">
+      <h1 className="mb-8 text-2xl font-bold text-surface-100">
         Adaugă o băutură
       </h1>
       <LogDrinkForm />

@@ -1,68 +1,56 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const PROTECTED_PREFIXES = ["/profile", "/tracker", "/venues/new", "/review/new"];
-const COOKIE_NAME = "sb-kwairprbgktvxfsicdvb-auth-token";
-
-interface JwtPayload {
-  sub: string;
-  email?: string;
-  exp: number;
-}
-
-function parseSessionCookie(raw: string): { userId: string; email: string } | null {
-  try {
-    const json = raw.startsWith("base64-")
-      ? Buffer.from(raw.slice(7), "base64").toString("utf8")
-      : decodeURIComponent(raw);
-
-    const session = JSON.parse(json) as {
-      access_token?: string;
-      user?: { id?: string; email?: string };
-    };
-
-    // Prefer the user object which is already decoded
-    if (session.user?.id) {
-      return { userId: session.user.id, email: session.user.email ?? "" };
-    }
-
-    // Fall back to parsing the JWT access token
-    const token = session.access_token;
-    if (!token) return null;
-
-    const payloadB64 = token.split(".")[1];
-    const payload = JSON.parse(
-      Buffer.from(payloadB64, "base64url").toString("utf8")
-    ) as JwtPayload;
-
-    if (payload.exp * 1000 < Date.now()) return null;
-
-    return { userId: payload.sub, email: payload.email ?? "" };
-  } catch {
-    return null;
-  }
-}
 
 export async function middleware(request: NextRequest) {
-  const cookieValue = request.cookies.get(COOKIE_NAME)?.value;
-  const parsed = cookieValue ? parseSessionCookie(cookieValue) : null;
+  // We'll rebuild this after getUser() so we can inject user headers into the request
+  let supabaseCookiesToSet: Array<{ name: string; value: string; options: object }> = [];
 
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          // Collect cookies that Supabase wants to refresh — apply them after getUser()
+          supabaseCookiesToSet = cookiesToSet;
+        },
+      },
+    }
+  );
+
+  // Validates token with Supabase; handles chunked cookies automatically
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Build request headers that server components will read via headers()
   const requestHeaders = new Headers(request.headers);
-  if (parsed) {
-    requestHeaders.set("x-user-id", parsed.userId);
-    requestHeaders.set("x-user-email", parsed.email);
+  if (user) {
+    requestHeaders.set("x-user-id", user.id);
+    requestHeaders.set("x-user-email", user.email ?? "");
   }
 
   const { pathname } = request.nextUrl;
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
 
-  if (!parsed && isProtected) {
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     url.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next({ request: { headers: requestHeaders } });
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+
+  // Apply any session cookies that Supabase refreshed during getUser()
+  supabaseCookiesToSet.forEach(({ name, value, options }) => {
+    response.cookies.set(name, value, options as Parameters<typeof response.cookies.set>[2]);
+  });
+
+  return response;
 }
 
 export const config = {

@@ -7,6 +7,7 @@ interface VenueMapLoaderProps {
   venues: Venue[];
   center?: [number, number];
   zoom?: number;
+  className?: string;
 }
 
 const VenueMap = dynamic(
@@ -14,13 +15,13 @@ const VenueMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-96 items-center justify-center rounded-xl border border-surface-200 bg-surface-50 dark:border-surface-700 dark:bg-surface-800">
+      <div className="flex h-full w-full items-center justify-center bg-surface-800">
         <p className="text-sm text-surface-400">Se încarcă harta...</p>
       </div>
     ),
   }
 );
 
-export function VenueMapLoader({ venues, center, zoom }: VenueMapLoaderProps) {
-  return <VenueMap venues={venues} center={center} zoom={zoom} />;
+export function VenueMapLoader({ venues, center, zoom, className }: VenueMapLoaderProps) {
+  return <VenueMap venues={venues} center={center} zoom={zoom} className={className} />;
 }

@@ -14,12 +14,12 @@ export function BadgeList({ badges }: BadgeListProps) {
   }
 
   return (
-    <ul className="flex flex-wrap gap-3">
+    <ul className="flex flex-wrap gap-2">
       {badges.map((badge) => (
         <li
           key={badge.id}
-          className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-800"
           title={badge.description}
+          className="flex items-center gap-2 rounded-full border border-amber-700/40 bg-amber-950/40 px-3 py-1.5 text-sm font-medium text-amber-300"
         >
           <span aria-hidden="true">{badge.icon}</span>
           {badge.name}

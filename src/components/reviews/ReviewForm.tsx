@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import { Star } from "lucide-react";
 import { submitReviewAction, deleteReviewAction } from "@/lib/reviews/actions";
 import type { Review } from "@/types/database";
 
@@ -9,45 +10,32 @@ interface ReviewFormProps {
   existingReview: Review | null;
 }
 
-interface StarPickerProps {
-  value: number;
-  onChange: (value: number) => void;
-}
-
-function StarPicker({ value, onChange }: StarPickerProps) {
+function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hovered, setHovered] = useState(0);
   const display = hovered || value;
 
   return (
     <div className="flex items-center gap-1" role="group" aria-label="Rating">
-      {Array.from({ length: 5 }, (_, i) => {
-        const star = i + 1;
-        return (
-          <button
-            key={star}
-            type="button"
-            onClick={() => onChange(star)}
-            onMouseEnter={() => setHovered(star)}
-            onMouseLeave={() => setHovered(0)}
-            aria-label={`${star} ${star === 1 ? "stea" : "stele"}`}
-            className="rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className={`h-7 w-7 transition-colors ${
-                star <= display
-                  ? "text-brand-400"
-                  : "text-surface-300 dark:text-surface-600"
-              }`}
-              aria-hidden="true"
-            >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          </button>
-        );
-      })}
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onClick={() => onChange(star)}
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
+          aria-label={`${star} ${star === 1 ? "stea" : "stele"}`}
+          className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        >
+          <Star
+            className={`h-7 w-7 transition-colors ${
+              star <= display
+                ? "fill-brand-400 text-brand-400"
+                : "fill-surface-700 text-surface-700"
+            }`}
+            aria-hidden="true"
+          />
+        </button>
+      ))}
     </div>
   );
 }
@@ -82,9 +70,7 @@ export function ReviewForm({ venueId, existingReview }: ReviewFormProps) {
           setRating(0);
         }
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Eroare necunoscută.";
-        setError(message);
+        setError(err instanceof Error ? err.message : "Eroare necunoscută.");
       }
     });
   }
@@ -99,9 +85,7 @@ export function ReviewForm({ venueId, existingReview }: ReviewFormProps) {
         await deleteReviewAction(existingReview.id, venueId);
         setRating(0);
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Eroare necunoscută.";
-        setError(message);
+        setError(err instanceof Error ? err.message : "Eroare necunoscută.");
       }
     });
   }
@@ -111,18 +95,13 @@ export function ReviewForm({ venueId, existingReview }: ReviewFormProps) {
       <input type="hidden" name="venue_id" value={venueId} />
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300">
-          Rating
-        </label>
+        <label className="mb-2 block text-sm font-medium text-surface-300">Rating</label>
         <StarPicker value={rating} onChange={setRating} />
       </div>
 
       <div>
-        <label
-          htmlFor="body"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Recenzia ta <span className="text-surface-400">(opțional)</span>
+        <label htmlFor="body" className="mb-1 block text-sm font-medium text-surface-300">
+          Recenzia ta <span className="text-surface-500">(opțional)</span>
         </label>
         <textarea
           id="body"
@@ -130,31 +109,20 @@ export function ReviewForm({ venueId, existingReview }: ReviewFormProps) {
           rows={3}
           defaultValue={existingReview?.body ?? ""}
           placeholder="Spune-ne ce ai băut și cum a fost..."
-          className="w-full rounded-lg border border-surface-300 bg-white px-3 py-2 text-sm text-surface-900 placeholder:text-surface-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-50"
+          className="w-full rounded-lg border border-surface-600 bg-surface-800 px-3 py-2 text-sm text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/30"
         />
       </div>
 
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
-
-      {success && (
-        <p className="text-sm text-green-600 dark:text-green-400">
-          Recenzia a fost salvată cu succes!
-        </p>
-      )}
+      {error && <p className="text-sm text-red-400">{error}</p>}
+      {success && <p className="text-sm text-green-400">Recenzia a fost salvată!</p>}
 
       <div className="flex items-center gap-3">
         <button
           type="submit"
           disabled={isPending || isDeleting}
-          className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-surface-900 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isPending
-            ? "Se salvează..."
-            : existingReview
-              ? "Actualizează recenzia"
-              : "Trimite recenzia"}
+          {isPending ? "Se salvează..." : existingReview ? "Actualizează" : "Trimite recenzia"}
         </button>
 
         {existingReview && (
@@ -162,9 +130,9 @@ export function ReviewForm({ venueId, existingReview }: ReviewFormProps) {
             type="button"
             onClick={handleDelete}
             disabled={isPending || isDeleting}
-            className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-950"
+            className="rounded-lg border border-red-800/60 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-950/50 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isDeleting ? "Se șterge..." : "Șterge recenzia"}
+            {isDeleting ? "Se șterge..." : "Șterge"}
           </button>
         )}
       </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import type { Venue } from "@/types/database";
 import { VenueCategoryBadge } from "./VenueCategoryBadge";
 import { StarRating } from "./StarRating";
@@ -11,26 +12,24 @@ export function VenueCard({ venue }: VenueCardProps) {
   return (
     <Link
       href={`/venues/${venue.id}`}
-      className="block rounded-xl border border-surface-200 bg-white p-4 shadow-sm transition hover:border-brand-400 hover:shadow-md dark:border-surface-700 dark:bg-surface-900 dark:hover:border-brand-500"
+      className="group block rounded-xl border border-surface-700/60 bg-surface-800/50 p-4 transition-all duration-200 hover:border-brand-500/50 hover:bg-surface-800"
     >
       <div className="mb-2 flex items-start justify-between gap-2">
-        <h2 className="line-clamp-1 text-base font-semibold text-surface-900 dark:text-surface-50">
+        <h2 className="line-clamp-1 text-base font-semibold text-surface-100 transition-colors group-hover:text-brand-300">
           {venue.name}
         </h2>
         {venue.category && <VenueCategoryBadge category={venue.category} />}
       </div>
 
-      <p className="mb-3 text-sm text-surface-500 dark:text-surface-400">
-        {venue.city}
-        {venue.address && ` — ${venue.address}`}
+      <p className="mb-3 flex items-center gap-1.5 text-sm text-surface-400">
+        <MapPin className="h-3.5 w-3.5 shrink-0 text-surface-500" />
+        {venue.city}{venue.judet ? `, ${venue.judet}` : ""}
       </p>
 
       <div className="flex items-center gap-2">
         <StarRating value={venue.rating_avg} />
-        <span className="text-xs text-surface-500 dark:text-surface-400">
-          {venue.rating_avg > 0
-            ? venue.rating_avg.toFixed(1)
-            : "–"}
+        <span className="text-xs text-surface-500">
+          {venue.rating_avg > 0 ? venue.rating_avg.toFixed(1) : "fără recenzii"}
           {venue.review_count > 0 && ` (${venue.review_count})`}
         </span>
       </div>

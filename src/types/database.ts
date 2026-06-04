@@ -39,6 +39,7 @@ export interface Venue {
   id: string;
   name: string;
   city: string;
+  judet: string | null;
   address: string | null;
   description: string | null;
   category: VenueCategory | null;

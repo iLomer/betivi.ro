@@ -10,9 +10,7 @@ interface ReviewSectionProps {
 
 export async function ReviewSection({ venueId }: ReviewSectionProps) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   const existingReview = user
     ? await getUserReviewForVenue(venueId, user.id)
@@ -20,26 +18,21 @@ export async function ReviewSection({ venueId }: ReviewSectionProps) {
 
   return (
     <div className="mt-8">
-      <h2 className="mb-4 text-lg font-semibold text-surface-900 dark:text-surface-50">
-        Recenzii
-      </h2>
+      <h2 className="mb-4 text-lg font-semibold text-surface-100">Recenzii</h2>
 
       <ReviewList venueId={venueId} />
 
       <div className="mt-6">
         {user ? (
-          <div className="rounded-xl border border-surface-200 bg-white p-4 dark:border-surface-700 dark:bg-surface-900">
-            <h3 className="mb-3 text-sm font-semibold text-surface-800 dark:text-surface-200">
+          <div className="rounded-xl border border-surface-700/60 bg-surface-800/50 p-4">
+            <h3 className="mb-3 text-sm font-semibold text-surface-200">
               {existingReview ? "Recenzia ta" : "Lasă o recenzie"}
             </h3>
             <ReviewForm venueId={venueId} existingReview={existingReview} />
           </div>
         ) : (
-          <p className="text-sm text-surface-500 dark:text-surface-400">
-            <Link
-              href="/auth/login"
-              className="font-medium text-brand-600 hover:text-brand-700"
-            >
+          <p className="text-sm text-surface-500">
+            <Link href="/auth/login" className="font-medium text-brand-400 hover:text-brand-300">
               Conectează-te
             </Link>{" "}
             pentru a scrie o recenzie.

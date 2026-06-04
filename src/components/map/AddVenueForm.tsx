@@ -2,31 +2,32 @@
 
 import { useActionState } from "react";
 import { createVenueAction } from "@/lib/venues/actions";
+import { LocationPicker } from "@/components/map/LocationPicker";
 
 const CATEGORIES = [
-  { value: "bar", label: "Bar" },
-  { value: "berarie", label: "Berărie" },
-  { value: "crama", label: "Cramă" },
-  { value: "terasa", label: "Terasă" },
-  { value: "club", label: "Club" },
+  { value: "bar",        label: "Bar" },
+  { value: "berarie",    label: "Berărie" },
+  { value: "crama",      label: "Cramă" },
+  { value: "terasa",     label: "Terasă" },
+  { value: "club",       label: "Club" },
   { value: "restaurant", label: "Restaurant" },
 ] as const;
 
 type ActionState = { error: string } | null;
 
-async function wrappedAction(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
+async function wrappedAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   try {
     await createVenueAction(formData);
     return null;
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Eroare necunoscută",
-    };
+    return { error: err instanceof Error ? err.message : "Eroare necunoscută" };
   }
 }
+
+const inputClass =
+  "w-full rounded-lg border border-surface-600 bg-surface-800 px-3 py-2 text-sm text-surface-100 placeholder:text-surface-500 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500/30";
+
+const labelClass = "mb-1 block text-sm font-medium text-surface-300";
 
 export function AddVenueForm() {
   const [state, formAction, isPending] = useActionState(wrappedAction, null);
@@ -34,131 +35,66 @@ export function AddVenueForm() {
   return (
     <form action={formAction} className="space-y-5">
       {state?.error && (
-        <div
-          role="alert"
-          className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300"
-        >
+        <div role="alert" className="rounded-lg border border-red-800/50 bg-red-950/50 p-3 text-sm text-red-300">
           {state.error}
         </div>
       )}
 
       <fieldset>
-        <label
-          htmlFor="name"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Nume locație <span aria-hidden="true">*</span>
+        <label htmlFor="name" className={labelClass}>
+          Nume locație <span className="text-brand-500">*</span>
         </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          placeholder="ex: Berea lui Dorel"
-          className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-        />
+        <input id="name" name="name" type="text" required placeholder="ex: Berea lui Dorel" className={inputClass} />
       </fieldset>
 
-      <fieldset>
-        <label
-          htmlFor="city"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Oraș <span aria-hidden="true">*</span>
-        </label>
-        <input
-          id="city"
-          name="city"
-          type="text"
-          required
-          placeholder="ex: Cluj-Napoca"
-          className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-        />
-      </fieldset>
+      <div className="grid grid-cols-2 gap-4">
+        <fieldset>
+          <label htmlFor="city" className={labelClass}>
+            Oraș / Sat <span className="text-brand-500">*</span>
+          </label>
+          <input id="city" name="city" type="text" required placeholder="ex: Cluj-Napoca" className={inputClass} />
+        </fieldset>
+
+        <fieldset>
+          <label htmlFor="judet" className={labelClass}>
+            Județ <span className="text-brand-500">*</span>
+          </label>
+          <input id="judet" name="judet" type="text" required placeholder="ex: Cluj" className={inputClass} />
+        </fieldset>
+      </div>
 
       <fieldset>
-        <label
-          htmlFor="category"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Categorie
-        </label>
-        <select
-          id="category"
-          name="category"
-          defaultValue="bar"
-          className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-        >
+        <label htmlFor="category" className={labelClass}>Categorie</label>
+        <select id="category" name="category" defaultValue="bar" className={inputClass}>
           {CATEGORIES.map((cat) => (
-            <option key={cat.value} value={cat.value}>
-              {cat.label}
-            </option>
+            <option key={cat.value} value={cat.value}>{cat.label}</option>
           ))}
         </select>
       </fieldset>
 
       <fieldset>
-        <label
-          htmlFor="address"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Adresă
-        </label>
-        <input
-          id="address"
-          name="address"
-          type="text"
-          placeholder="ex: Str. Memorandumului 10"
-          className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-        />
+        <label htmlFor="address" className={labelClass}>Adresă</label>
+        <input id="address" name="address" type="text" placeholder="ex: Str. Memorandumului 10" className={inputClass} />
       </fieldset>
 
       <fieldset>
-        <label
-          htmlFor="description"
-          className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300"
-        >
-          Descriere
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          rows={3}
-          placeholder="Spune ceva despre această locație..."
-          className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-        />
+        <label htmlFor="description" className={labelClass}>Descriere</label>
+        <textarea id="description" name="description" rows={3} placeholder="Spune ceva despre această locație..." className={inputClass} />
       </fieldset>
 
       <fieldset>
-        <legend className="mb-1 block text-sm font-medium text-surface-700 dark:text-surface-300">
-          Coordonate GPS (opțional)
+        <legend className="mb-2 block text-sm font-medium text-surface-300">
+          Locație pe hartă <span className="text-surface-500">(opțional)</span>
         </legend>
-        <div className="flex gap-3">
-          <input
-            id="lat"
-            name="lat"
-            type="number"
-            step="any"
-            placeholder="Latitudine"
-            className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-          />
-          <input
-            id="lng"
-            name="lng"
-            type="number"
-            step="any"
-            placeholder="Longitudine"
-            className="w-full rounded-lg border border-surface-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
-          />
-        </div>
+        <LocationPicker />
       </fieldset>
 
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-bold uppercase tracking-widest text-surface-900 transition-colors hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isPending ? "Se adaugă..." : "Adaugă locația"}
+        {isPending ? "Se adaugă..." : "Adaugă birtul"}
       </button>
     </form>
   );

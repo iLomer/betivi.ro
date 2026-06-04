@@ -12,9 +12,9 @@ export async function getReviewsByVenueId(
 ): Promise<ReviewWithProfile[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const { data: reviews, error } = await supabase
     .from("reviews")
-    .select("*, profiles(username)")
+    .select("*")
     .eq("venue_id", venueId)
     .order("created_at", { ascending: false });
 
@@ -22,7 +22,20 @@ export async function getReviewsByVenueId(
     throw new Error(`Failed to fetch reviews: ${error.message}`);
   }
 
-  return (data ?? []) as ReviewWithProfile[];
+  if (!reviews?.length) return [];
+
+  const userIds = [...new Set(reviews.map((r) => r.user_id))];
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .in("id", userIds);
+
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+
+  return reviews.map((review) => ({
+    ...review,
+    profiles: profileMap.get(review.user_id) ?? null,
+  })) as ReviewWithProfile[];
 }
 
 export async function getUserReviewForVenue(

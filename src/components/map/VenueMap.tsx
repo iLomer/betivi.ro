@@ -8,28 +8,45 @@ interface VenueMapProps {
   venues: Venue[];
   center?: [number, number];
   zoom?: number;
+  className?: string;
 }
 
 const ROMANIA_CENTER: [number, number] = [45.9432, 24.9668];
 const DEFAULT_ZOOM = 7;
 
-const CATEGORY_ICONS: Record<string, string> = {
-  bar: "🍺",
-  berarie: "🍻",
-  crama: "🍷",
-  terasa: "☀️",
-  club: "🎵",
-  restaurant: "🍽️",
-};
-
-function getCategoryIcon(category: Venue["category"]): string {
-  return CATEGORY_ICONS[category ?? ""] ?? "📍";
-}
-
 type VenueWithCoords = Venue & { lat: number; lng: number };
 
 function hasCoords(venue: Venue): venue is VenueWithCoords {
   return venue.lat !== null && venue.lng !== null;
+}
+
+function makeMarkerHtml(category: Venue["category"]): string {
+  const colors: Record<string, string> = {
+    bar: "#d4a634",
+    berarie: "#e0bc52",
+    crama: "#a8441f",
+    terasa: "#4a9e6b",
+    club: "#7c5cbf",
+    restaurant: "#c97a27",
+  };
+  const color = colors[category ?? ""] ?? "#d4a634";
+  return `<div style="
+    width:14px;height:14px;border-radius:50%;
+    background:${color};border:2.5px solid #0a0705;
+    box-shadow:0 0 0 1.5px ${color}88,0 2px 8px rgba(0,0,0,0.6);
+  "></div>`;
+}
+
+function makePopupHtml(venue: Venue): string {
+  return `
+    <div style="min-width:160px">
+      <p style="font-weight:700;font-size:14px;color:#d4a634;margin:0 0 4px">${venue.name}</p>
+      <p style="font-size:12px;color:#9c7a45;margin:0 0 8px">${venue.city}${venue.judet ? `, ${venue.judet}` : ""}</p>
+      <a href="/venues/${venue.id}" style="font-size:12px;font-weight:600;color:#d4a634;text-decoration:none;">
+        Vezi detalii →
+      </a>
+    </div>
+  `;
 }
 
 async function initMap(
@@ -40,7 +57,6 @@ async function initMap(
   mounted: { current: boolean }
 ): Promise<import("leaflet").Map | null> {
   const L = (await import("leaflet")).default;
-
   if (!mounted.current) return null;
 
   const map = L.map(container, {
@@ -50,26 +66,28 @@ async function initMap(
     scrollWheelZoom: false,
   });
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19,
-  }).addTo(map);
+  L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 19,
+    }
+  ).addTo(map);
 
   venues.filter(hasCoords).forEach((venue) => {
     const icon = L.divIcon({
-      html: `<span style="font-size:22px;line-height:1;">${getCategoryIcon(venue.category)}</span>`,
+      html: makeMarkerHtml(venue.category),
       className: "",
-      iconSize: [28, 28],
-      iconAnchor: [14, 28],
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
     });
-    const popup = `
-      <strong>${venue.name}</strong><br/>
-      ${venue.city}${venue.address ? `<br/>${venue.address}` : ""}
-      <br/><a href="/venues/${venue.id}" style="color:#d97706;font-weight:600;">Vezi detalii →</a>
-    `;
+
     L.marker([venue.lat, venue.lng], { icon })
-      .bindPopup(popup, { maxWidth: 220 })
+      .bindPopup(makePopupHtml(venue), {
+        className: "betivi-popup",
+        maxWidth: 240,
+      })
       .addTo(map);
   });
 
@@ -80,6 +98,7 @@ export function VenueMap({
   venues,
   center = ROMANIA_CENTER,
   zoom = DEFAULT_ZOOM,
+  className = "h-96 w-full",
 }: VenueMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
@@ -109,7 +128,7 @@ export function VenueMap({
 
   if (mapError) {
     return (
-      <div className="flex h-96 w-full items-center justify-center rounded-xl border border-red-200 bg-red-50 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
+      <div className={`flex items-center justify-center rounded-xl border border-red-800 bg-red-950 text-sm text-red-300 ${className}`}>
         {mapError}
       </div>
     );
@@ -118,7 +137,7 @@ export function VenueMap({
   return (
     <div
       ref={mapRef}
-      className="h-96 w-full rounded-xl border border-surface-200 dark:border-surface-700"
+      className={className}
       aria-label="Harta locațiilor"
       role="region"
     />

@@ -57,6 +57,22 @@ export async function getVenueById(id: string): Promise<Venue | null> {
   return data as Venue;
 }
 
+export async function getVenuesByUserId(userId: string): Promise<Venue[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("venues")
+    .select("*")
+    .eq("created_by", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Failed to fetch user venues: ${error.message}`);
+  }
+
+  return (data ?? []) as Venue[];
+}
+
 export async function getDistinctCities(): Promise<string[]> {
   const supabase = await createClient();
 
