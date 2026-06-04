@@ -23,7 +23,7 @@ export function LocationPicker() {
       const map = L.map(mapRef.current, {
         center: ROMANIA_CENTER,
         zoom: 7,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
       });
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

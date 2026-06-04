@@ -63,7 +63,7 @@ async function initMap(
     center,
     zoom,
     zoomControl: true,
-    scrollWheelZoom: false,
+    scrollWheelZoom: true,
   });
 
   L.tileLayer(
