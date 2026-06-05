@@ -97,7 +97,33 @@ export default async function RootLayout({
           </div>
         </nav>
         <SessionRefresher />
-        {children}
+        <div className="flex flex-1 flex-col">
+          {children}
+        </div>
+        <footer className="border-t border-surface-700/40 bg-surface-900">
+          <div className="mx-auto max-w-6xl px-6 py-5">
+            <div className="flex flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
+              <p className="text-xs text-surface-600">
+                <span className="font-semibold text-surface-500">+18</span>
+                {" "}· Consumați alcool responsabil · Nu beți și nu conduceți
+              </p>
+              <div className="flex items-center gap-4 text-xs text-surface-600">
+                <Link href="/ghid" className="transition-colors hover:text-surface-400">
+                  Ghidul comunității
+                </Link>
+                <a
+                  href="https://www.aa.ro"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-surface-400"
+                >
+                  Ajutor · aa.ro
+                </a>
+                <span>© {new Date().getFullYear()} betivi.ro</span>
+              </div>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );
